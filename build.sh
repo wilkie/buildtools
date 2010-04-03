@@ -40,15 +40,15 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 
 # PATCH BINUTILS
 patch -p0 -d binutils-${BINUTILS_VER} < ../binutils-xomb.patch
-cp -r binutils-files/* binutils-${BINUTILS_VER}/.
+cp -r ../binutils-files/* binutils-${BINUTILS_VER}/.
 
 # PATCH GCC
 patch -p0 -d gcc-${GCC_VER} < ../gcc-xomb.patch
-cp -r gcc-files/* gcc-${GCC_VER}/.
+cp -r ../gcc-files/* gcc-${GCC_VER}/.
 
 # PATCH NEWLIB
 patch -p0 -d newlib-${NEWLIB_VER} < ../newlib-xomb.patch
-cp -r newlib-files/* newlib-${NEWLIB_VER}/.
+cp -r ../newlib-files/* newlib-${NEWLIB_VER}/.
 
 # MAKE OBJECT DIRECTORIES
 mkdir -p binutils-obj
