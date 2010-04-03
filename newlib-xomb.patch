@@ -1,0 +1,48 @@
+Index: config.sub
+===================================================================
+RCS file: /cvs/src/src/config.sub,v
+retrieving revision 1.72
+diff -u -r1.72 config.sub
+--- config.sub	18 Dec 2008 03:26:46 -0000	1.72
++++ config.sub	17 Jan 2009 22:28:40 -0000
+@@ -1257,7 +1257,7 @@
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* \
++	      | -aos* | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+Index: newlib/configure.host
+===================================================================
+RCS file: /cvs/src/src/newlib/configure.host,v
+retrieving revision 1.104
+diff -u -r1.104 configure.host
+--- newlib/configure.host	17 Dec 2008 23:09:09 -0000	1.104
++++ newlib/configure.host	17 Jan 2009 22:28:40 -0000
+@@ -500,6 +500,9 @@
+   w65-*-*)
+ 	sys_dir=w65
+ 	;;
++  x86_64-*-xomb*)
++	sys_dir=xomb
++	;;
+   xscale-*-*)
+ 	sys_dir=arm
+ 	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
+Index: newlib/libc/sys/configure.in
+===================================================================
+RCS file: /cvs/src/src/newlib/libc/sys/configure.in,v
+retrieving revision 1.8
+diff -u -r1.8 configure.in
+--- newlib/libc/sys/configure.in	24 May 2007 17:33:37 -0000	1.8
++++ newlib/libc/sys/configure.in	17 Jan 2009 22:28:44 -0000
+@@ -44,6 +44,7 @@
+ 	sysvnecv70) AC_CONFIG_SUBDIRS(sysvnecv70) ;;
+ 	tic80) AC_CONFIG_SUBDIRS(tic80) ;;
+ 	w65) AC_CONFIG_SUBDIRS(w65) ;;
++	xomb) AC_CONFIG_SUBDIRS(xomb) ;;
+ 	z8ksim) AC_CONFIG_SUBDIRS(z8ksim) ;;
+   esac;
+ fi

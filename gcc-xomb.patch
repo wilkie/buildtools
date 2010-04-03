@@ -1,0 +1,82 @@
+Index: libgcc/config.host
+===================================================================
+--- libgcc/config.host	(revision 151661)
++++ libgcc/config.host	(working copy)
+@@ -549,6 +549,8 @@
+ 	;;
+ vax-*-openbsd*)
+ 	;;
++x86_64-*-xomb*)
++	;;
+ xstormy16-*-elf)
+ 	;;
+ xtensa*-*-elf*)
+Index: gcc/config.gcc
+===================================================================
+--- gcc/config.gcc	(revision 151661)
++++ gcc/config.gcc	(working copy)
+@@ -594,6 +594,13 @@
+     *) echo 'Unknown thread configuration for VxWorks'; exit 1 ;;
+   esac
+   ;;
++*-*-xomb*)
++  extra_parts="crtbegin.o crtend.o"
++  gas=yes
++  gnu_ld=yes
++  # Assume that newlib is being used and so __cxa_atexit is provided.
++  default_use_cxa_atexit=yes
++  ;;
+ *-*-elf)
+   # Assume that newlib is being used and so __cxa_atexit is provided.
+   default_use_cxa_atexit=yes
+@@ -1071,6 +1078,11 @@
+ 		;;
+ 	esac
+ 	;;
++x86_64-*-xomb*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h  xomb.h"
++	tmake_file="${tmake_file} i386/t-i386elf t-svr4"
++	use_fixproto=yes
++	;;
+ i[34567]86-*-darwin*)
+ 	need_64bit_hwint=yes
+ 
+Index: config.sub
+===================================================================
+--- config.sub	(revision 151661)
++++ config.sub	(working copy)
+@@ -4,7 +4,7 @@
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+ #   Free Software Foundation, Inc.
+ 
+-timestamp='2009-08-17'
++timestamp='2009-09-12'
+ 
+ # This file is (in principle) common to ALL GNU software.
+ # The presence of a machine in this file suggests that SOME GNU software
+@@ -1274,7 +1274,7 @@
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+Index: libstdc++-v3/crossconfig.m4
+===================================================================
+--- libstdc++-v3/crossconfig.m4	(revision 151661)
++++ libstdc++-v3/crossconfig.m4	(working copy)
+@@ -243,6 +243,12 @@
+       AC_DEFINE(HAVE_ISNANL)
+     fi
+     ;;
++  *-xomb*)
++    AC_CHECK_HEADERS([sys/types.h locale.h float.h])
++    GLIBCXX_CHECK_BUILTIN_MATH_SUPPORT
++    GLIBCXX_CHECK_COMPLEX_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
+   *-vxworks)
+     AC_DEFINE(HAVE_ACOSF)
+     AC_DEFINE(HAVE_ASINF)
