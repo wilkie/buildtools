@@ -1,7 +1,6 @@
 export TARGET=x86_64-pc-xomb
 export PREFIX=`pwd`/local
 
-mkdir -p build
 cd build
 
 BINUTILS_VER=2.20
@@ -39,15 +38,15 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 # Patch and push new code into each package
 
 # PATCH BINUTILS
-patch -p0 -d binutils-${BINUTILS_VER} < binutils-xomb.patch
+patch -p0 -d binutils-${BINUTILS_VER} < ../binutils-xomb.patch
 cp -r binutils-files/* binutils-${BINUTILS_VER}/.
 
 # PATCH GCC
-patch -p0 -d gcc-${GCC_VER} < gcc-xomb.patch
+patch -p0 -d gcc-${GCC_VER} < ../gcc-xomb.patch
 cp -r gcc-files/* gcc-${GCC_VER}/.
 
 # PATCH NEWLIB
-patch -p0 -d newlib-${NEWLIB_VER} < newlib-xomb.patch
+patch -p0 -d newlib-${NEWLIB_VER} < ../newlib-xomb.patch
 cp -r newlib-files/* newlib-${NEWLIB_VER}/.
 
 # MAKE OBJECT DIRECTORIES
