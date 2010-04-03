@@ -2,10 +2,11 @@ export TARGET=x86_64-pc-xomb
 export PREFIX=`pwd`/local
 
 mkdir -p build
+mkdir -p local
 cd build
 
 BINUTILS_VER=2.20
-GCC_VER=4.3.3
+GCC_VER=4.4.3
 GMP_VER=5.0.1
 MPFR_VER=2.4.2
 NEWLIB_VER=1.18.0
@@ -56,7 +57,6 @@ mkdir -p gcc-obj
 mkdir -p newlib-obj
 mkdir -p gmp-obj
 mkdir -p mpfr-obj
-mkdir -p local
 
 # Compile all packages
 
