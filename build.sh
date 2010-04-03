@@ -48,7 +48,7 @@ patch -p0 -d gcc-${GCC_VER} < gcc-xomb.patch
 cp -r gcc-xomb/* gcc-${GCC_VER}/.
 
 # PATCH NEWLIB
-patch -p0 -d newlib-${GCC_VER} < newlib-xomb.patch
+patch -p0 -d newlib-${NEWLIB_VER} < newlib-xomb.patch
 cp -r newlib-xomb/* newlib-${NEWLIB_VER}/.
 
 # MAKE OBJECT DIRECTORIES
