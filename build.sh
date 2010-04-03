@@ -36,20 +36,16 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 # Patch and push new code into each package
 
 # PATCH BINUTILS
-cp binutils.ld-emulparams.tar.bz2 binutils-${BINUTILS_VER}
-cd binutils-${BINUTILS_VER}
-tar -xjf binutils.ld-emulparams.tar.bz2
-cd ..
-
 patch -p0 -d binutils-${BINUTILS_VER} < binutils-xomb.patch
+cp -r binutils-files/* binutils-${BINUTILS_VER}/.
 
 # PATCH GCC
 patch -p0 -d gcc-${GCC_VER} < gcc-xomb.patch
-cp -r gcc-xomb/* gcc-${GCC_VER}/.
+cp -r gcc-files/* gcc-${GCC_VER}/.
 
 # PATCH NEWLIB
 patch -p0 -d newlib-${NEWLIB_VER} < newlib-xomb.patch
-cp -r newlib-xomb/* newlib-${NEWLIB_VER}/.
+cp -r newlib-files/* newlib-${NEWLIB_VER}/.
 
 # MAKE OBJECT DIRECTORIES
 mkdir -p binutils-obj
@@ -85,7 +81,6 @@ make install
 cd ..
 
 # COMPILE GCC
-cp -r gcc-xomb/* gcc-${GCC_VER}/.
 cd gcc-obj
 ../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++,fortran --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-nls --with-headers=$PREFIX/include --with-newlib
 make all-gcc
@@ -96,8 +91,6 @@ cd ..
 
 # COMPILE NEWLIB-XOMB
 cd newlib-${NEWLIB_VER}/newlib/libc/sys
-mkdir -p xomb
-cp ../../../../newlib-xomb/newlib/libc/sys/xomb/* xomb/.
 ./configure
 cd ../../../..
 
