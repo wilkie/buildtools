@@ -1,64 +1,27 @@
-? xomb.patch
-? ld/emulparams/xomb_x86_64.sh
-Index: config.sub
-===================================================================
-RCS file: /cvs/src/src/config.sub,v
-retrieving revision 1.72
-diff -u -r1.72 config.sub
---- config.sub	18 Dec 2008 03:26:46 -0000	1.72
-+++ config.sub	18 Jan 2009 01:04:52 -0000
-@@ -1257,7 +1257,7 @@
- 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
- 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+--- ../../binutils-2.20/config.sub	2009-08-17 00:10:29.000000000 -0400
++++ config.sub	2010-04-03 18:01:47.000000000 -0400
+@@ -1275,6 +1275,7 @@ case $os in
+ 	      | -kopensolaris* \
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
--	      | -aos* \
-+	      | -aos* | -xomb* \
+ 	      | -aos* | -aros* \
++		  | -xomb* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
-Index: bfd/config.bfd
-===================================================================
-RCS file: /cvs/src/src/bfd/config.bfd,v
-retrieving revision 1.243
-diff -u -r1.243 config.bfd
---- bfd/config.bfd	6 Jan 2009 14:40:32 -0000	1.243
-+++ bfd/config.bfd	18 Jan 2009 01:04:53 -0000
-@@ -601,6 +601,11 @@
-     targ_selvecs="bfd_elf32_i386_vec"
-     want64=true
-     ;;
-+  x86_64-*-xomb*)
-+    targ_defvec=bfd_elf64_x86_64_vec
-+    targ_selvecs=bfd_elf32_i386_vec
-+    want64=true
-+    ;;
-   x86_64-*-elf*)
-     targ_defvec=bfd_elf64_x86_64_vec
-     targ_selvecs="bfd_elf32_i386_vec i386coff_vec"
-Index: gas/configure.tgt
-===================================================================
-RCS file: /cvs/src/src/gas/configure.tgt,v
-retrieving revision 1.44
-diff -u -r1.44 configure.tgt
---- gas/configure.tgt	23 Dec 2008 19:10:20 -0000	1.44
-+++ gas/configure.tgt	18 Jan 2009 01:04:53 -0000
-@@ -231,6 +231,8 @@
-   i386-*-chaos)				fmt=elf ;;
-   i386-*-rdos*)				fmt=elf ;;
- 
-+  i386-*-xomb*)                         fmt=elf ;;
-+
-   i860-*-*)				fmt=elf endian=little ;;
- 
-   i960-*-elf*)				fmt=elf ;;
-Index: ld/Makefile.in
-===================================================================
-RCS file: /cvs/src/src/ld/Makefile.in,v
-retrieving revision 1.279
-diff -u -r1.279 Makefile.in
---- ld/Makefile.in	23 Dec 2008 19:10:22 -0000	1.279
-+++ ld/Makefile.in	18 Jan 2009 01:04:57 -0000
-@@ -1859,6 +1859,9 @@
+--- ../../binutils-2.20/ld/configure.tgt	2009-08-06 13:38:03.000000000 -0400
++++ ld/configure.tgt	2010-04-03 18:01:16.000000000 -0400
+@@ -201,6 +201,8 @@ i[3-7]86-*-linux-*)	targ_emul=elf_i386
+ 			targ64_extra_emuls="elf_x86_64 elf_l1om"
+ 			targ64_extra_libpath=elf_x86_64
+ 			tdir_i386linux=${targ_alias}aout ;;
++x86_64-*-xomb*)         targ_emul=xomb_x86_64 ;;
++			
+ x86_64-*-linux-*)	targ_emul=elf_x86_64
+ 			targ_extra_emuls="elf_i386 i386linux elf_l1om"
+ 			targ_extra_libpath=elf_i386
+--- ../../binutils-2.20/ld/Makefile.in	2009-09-07 08:10:24.000000000 -0400
++++ ld/Makefile.in	2010-04-03 18:01:16.000000000 -0400
+@@ -2451,6 +2451,9 @@ eelf64ltsmip.c: $(srcdir)/emulparams/elf
  eelf_i386.c: $(srcdir)/emulparams/elf_i386.sh \
    $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_i386 "$(tdir_elf_i386)"
@@ -68,19 +31,17 @@ diff -u -r1.279 Makefile.in
  eelf_x86_64.c: $(srcdir)/emulparams/elf_x86_64.sh \
    $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_x86_64 "$(tdir_elf_x86_64)"
-Index: ld/configure.tgt
-===================================================================
-RCS file: /cvs/src/src/ld/configure.tgt,v
-retrieving revision 1.222
-diff -u -r1.222 configure.tgt
---- ld/configure.tgt	23 Dec 2008 19:10:22 -0000	1.222
-+++ ld/configure.tgt	18 Jan 2009 01:04:57 -0000
-@@ -196,6 +196,8 @@
- 			targ64_extra_emuls=elf_x86_64
- 			targ64_extra_libpath=elf_x86_64
- 			tdir_i386linux=${targ_alias}aout ;;
-+x86_64-*-xomb*)         targ_emul=xomb_x86_64 ;;
-+			
- x86_64-*-linux-*)	targ_emul=elf_x86_64
- 			targ_extra_emuls="elf_i386 i386linux"
- 			targ_extra_libpath=elf_i386
+--- ../../binutils-2.20/bfd/config.bfd	2009-08-06 13:38:00.000000000 -0400
++++ bfd/config.bfd	2010-04-03 18:01:16.000000000 -0400
+@@ -615,6 +615,11 @@ case "${targ}" in
+     targ_selvecs="bfd_elf32_i386_vec bfd_elf64_l1om_vec"
+     want64=true
+     ;;
++  x86_64-*-xomb*)
++    targ_defvec=bfd_elf64_x86_64_vec
++    targ_selvecs=bfd_elf32_i386_vec
++    want64=true
++    ;;
+   x86_64-*-elf*)
+     targ_defvec=bfd_elf64_x86_64_vec
+     targ_selvecs="bfd_elf32_i386_vec bfd_elf64_l1om_vec i386coff_vec"
