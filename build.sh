@@ -103,7 +103,7 @@ cd ../../../..
 
 # COMPILE NEWLIB
 cd newlib-obj
-../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX
+../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX
 make all
 make install
 cd ..
