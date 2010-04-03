@@ -1,6 +1,9 @@
 export TARGET=x86_64-pc-xomb
 export PREFIX=`pwd`/local
 
+mkdir -p build
+cd build
+
 BINUTILS_VER=2.20
 GCC_VER=4.3.3
 GMP_VER=5.0.1
@@ -99,4 +102,6 @@ cd newlib-obj
 ../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX
 make all
 make install
+cd ..
+
 cd ..
