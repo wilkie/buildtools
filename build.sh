@@ -1,5 +1,5 @@
 export TARGET=x86_64-pc-xomb
-export PREFIX=`pwd`
+export PREFIX=`pwd`/local
 
 BINUTILS_VER=2.20
 GCC_VER=4.3.3
@@ -57,6 +57,7 @@ mkdir -p gcc-obj
 mkdir -p newlib-obj
 mkdir -p gmp-obj
 mkdir -p mpfr-obj
+mkdir -p local
 
 # Compile all packages
 
@@ -84,6 +85,7 @@ make install
 cd ..
 
 # COMPILE GCC
+cp -r gcc-xomb/* gcc-${GCC_VER}/.
 cd gcc-obj
 ../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++,fortran --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-nls --with-headers=$PREFIX/include --with-newlib
 make all-gcc
@@ -94,12 +96,14 @@ cd ..
 
 # COMPILE NEWLIB-XOMB
 cd newlib-${NEWLIB_VER}/newlib/libc/sys
+mkdir -p xomb
+cp ../../../../newlib-xomb/newlib/libc/sys/xomb/* xomb/.
 ./configure
 cd ../../../..
 
 # COMPILE NEWLIB
 cd newlib-obj
-../newlib-src/configure --target=$TARGET --prefix=$PREFIX
+../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX
 make all
 make install
 cd ..

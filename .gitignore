@@ -1,0 +1,7 @@
+newlib-*
+gcc-*
+binutils-*
+gmp-*
+mpfr-*
+local
+*.tar
