@@ -38,7 +38,7 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 # PATCH BINUTILS
 cp binutils.ld-emulparams.tar.bz2 binutils-${BINUTILS_VER}
 cd binutils-${BINUTILS_VER}
-tar -xf binutils.ld-emulparams.tar.bz2
+tar -xjf binutils.ld-emulparams.tar.bz2
 cd ..
 
 patch -p0 -d binutils-${BINUTILS_VER} < binutils-xomb.patch
