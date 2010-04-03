@@ -1,6 +1,7 @@
 export TARGET=x86_64-pc-xomb
 export PREFIX=`pwd`/local
 
+mkdir -p build
 cd build
 
 BINUTILS_VER=2.20
