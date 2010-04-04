@@ -119,6 +119,8 @@ echo "PASS-2 COMPILE GCC"
 cd gcc-obj
 #make all-target-libgcc
 #make install-target-libgcc
+make all-target-libstdc++-v3 || exit
+make install-target-libstdc++-v3 || exit
 make || exit
 make install || exit
 cd ..
