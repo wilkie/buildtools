@@ -1,0 +1,6 @@
+An evolving effort to automate generation of a XOmB toolchain and crosscompiler.
+
+currently dies during the second GCC phase with the bizarre error:
+"/home/wolfwood/repos/buildtools/build/gcc-obj/./gcc/include-fixed/time.h:12: error: conflicting types for 'clock_t'
+/home/wolfwood/repos/buildtools/local/x86_64-pc-xomb/include/sys/types.h:104: note: previous declaration of 'clock_t' was here
+"

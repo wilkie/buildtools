@@ -25,7 +25,7 @@
  	sys_dir=w65
  	;;
 +  x86_64-*-xomb*)
-+	machine_dir=xomb
++	sys_dir=xomb
 +	;;
    xscale-*-*)
  	sys_dir=arm
