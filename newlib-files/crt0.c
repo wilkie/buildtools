@@ -18,6 +18,5 @@ _start(){
 
   // XXX: get argc and argv
 
-
   exit(main(0,0, __env));
 }

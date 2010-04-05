@@ -7,7 +7,6 @@
 
 int
 _exit(int val){
-  exit(val);
   return (-1);
 }
 
@@ -139,6 +138,7 @@ sbrk(int nbytes){
   static caddr_t heap_ptr = NULL;
   caddr_t base;
   
+  // TODO: REPLACE allocPage with a call to a page allocator
   int temp;
 
   if(heap_ptr == NULL){
@@ -160,35 +160,23 @@ sbrk(int nbytes){
   }
 
   while(nbytes > PAGE_SIZE){
-    allocPage(heap_ptr);
+	//
+    // allocPage(heap_ptr);
+	//
     nbytes -= (int) PAGE_SIZE;
     heap_ptr = heap_ptr + PAGE_SIZE;
   }
   
   if( nbytes > 0){
-    allocPage(heap_ptr);
+	//
+    // allocPage(heap_ptr);
+	//
 
     heap_ptr += nbytes;
   }
 
 
   return base;
-	/*
-  static caddr_t heap_ptr = NULL;
-  caddr_t        base;
-
-  if (heap_ptr == NULL) {
-    heap_ptr = (caddr_t)&_end;
-  }
-
-  if ((RAMSIZE - heap_ptr) >= 0) {
-    base = heap_ptr;
-    heap_ptr += nbytes;
-    return (base);
-  } else {
-    errno = ENOMEM;
-    return ((caddr_t)-1);
-		}*/
 }
 
 
