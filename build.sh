@@ -10,7 +10,9 @@ export TARGET=x86_64-pc-${OSNAME}
 export PREFIX=`pwd`/local
 
 # Fix patches with osname
-perl -pi -e 's/{{OSNAME}}/${OSNAME}/g' *.patch
+PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
+perl -pi -e $PERLCMD *.patch
+perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
 
 mkdir -p build
 mkdir -p local
@@ -54,7 +56,7 @@ cp -r ../binutils-files/* binutils-${BINUTILS_VER}/.
 
 echo "PATCH GCC"
 patch -p0 -d gcc-${GCC_VER} < ../gcc.patch || exit
-cp -r ../gcc-files/* gcc-${GCC_VER}/.
+cp ../gcc-files/gcc/config/os.h gcc-${GCC_VER}/gcc/config/${OSNAME}.h
 
 echo "PATCH NEWLIB"
 patch -p0 -d newlib-${NEWLIB_VER} < ../newlib.patch || exit
