@@ -1,4 +1,4 @@
-OSNAME=xomb
+OSNAME=myos
 
 BINUTILS_VER=2.20
 GCC_VER=4.4.3
