@@ -1,15 +1,20 @@
-export TARGET=x86_64-pc-xomb
-export PREFIX=`pwd`/local
-
-mkdir -p build
-mkdir -p local
-cd build
+OSNAME=xomb
 
 BINUTILS_VER=2.20
 GCC_VER=4.4.3
 GMP_VER=5.0.1
 MPFR_VER=2.4.2
 NEWLIB_VER=1.18.0
+
+export TARGET=x86_64-pc-${OSNAME}
+export PREFIX=`pwd`/local
+
+# Fix patches with osname
+perl -pi -e 's/{{OSNAME}}/${OSNAME}/g' *.patch
+
+mkdir -p build
+mkdir -p local
+cd build
 
 WFLAGS=-c
 
@@ -44,16 +49,17 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 # Patch and push new code into each package
 
 echo "PATCH BINUTILS"
-patch -p0 -d binutils-${BINUTILS_VER} < ../binutils-xomb.patch || exit
+patch -p0 -d binutils-${BINUTILS_VER} < ../binutils.patch || exit
 cp -r ../binutils-files/* binutils-${BINUTILS_VER}/.
 
 echo "PATCH GCC"
-patch -p0 -d gcc-${GCC_VER} < ../gcc-xomb.patch || exit
+patch -p0 -d gcc-${GCC_VER} < ../gcc.patch || exit
 cp -r ../gcc-files/* gcc-${GCC_VER}/.
 
 echo "PATCH NEWLIB"
-patch -p0 -d newlib-${NEWLIB_VER} < ../newlib-xomb.patch || exit
-cp -r ../newlib-files/* newlib-${NEWLIB_VER}/.
+patch -p0 -d newlib-${NEWLIB_VER} < ../newlib.patch || exit
+mkdir -p newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}
+cp -r ../newlib-files/* newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/.
 
 echo "MAKE OBJECT DIRECTORIES"
 mkdir -p binutils-obj
@@ -103,7 +109,7 @@ cd ..
 echo "AUTOCONF NEWLIB-XOMB"
 cd newlib-${NEWLIB_VER}/newlib/libc/sys
 autoconf || exit
-cd xomb
+cd ${OSNAME}
 autoreconf || exit
 cd ../../../../..
 
