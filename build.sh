@@ -52,7 +52,7 @@ tar -xf newlib-${NEWLIB_VER}.tar.gz
 
 echo "PATCH BINUTILS"
 patch -p0 -d binutils-${BINUTILS_VER} < ../binutils.patch || exit
-cp ../binutils-files/ld/emulparams/os_x86_64.sh binutils-${BINUTILS_VER}/ld/emulparams/.
+cp ../binutils-files/ld/emulparams/os_x86_64.sh binutils-${BINUTILS_VER}/ld/emulparams/${OSNAME}_x86_64.sh
 
 echo "PATCH GCC"
 patch -p0 -d gcc-${GCC_VER} < ../gcc.patch || exit
