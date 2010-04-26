@@ -4,7 +4,7 @@
  	      | -kopensolaris* \
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
  	      | -aos* | -aros* \
-+		  | -{{OSNAME}}* \
++		  | -xomb* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
@@ -14,7 +14,7 @@
  	sysvnecv70) AC_CONFIG_SUBDIRS(sysvnecv70) ;;
  	tic80) AC_CONFIG_SUBDIRS(tic80) ;;
  	w65) AC_CONFIG_SUBDIRS(w65) ;;
-+	{{OSNAME}}) AC_CONFIG_SUBDIRS({{OSNAME}}) ;;
++	xomb) AC_CONFIG_SUBDIRS(xomb) ;;
  	z8ksim) AC_CONFIG_SUBDIRS(z8ksim) ;;
    esac;
  fi
@@ -24,8 +24,8 @@
    w65-*-*)
  	sys_dir=w65
  	;;
-+  x86_64-*-{{OSNAME}}*)
-+	sys_dir={{OSNAME}}
++  x86_64-*-xomb*)
++	sys_dir=xomb
 +	;;
    xscale-*-*)
  	sys_dir=arm

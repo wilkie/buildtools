@@ -4,7 +4,7 @@
  	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
  	      | -aos* | -aros* \
-+		  | -{{OSNAME}}* \
++		  | -xomb* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
@@ -14,7 +14,7 @@
        AC_DEFINE(HAVE_ISNANL)
      fi
      ;;
-+  *-{{OSNAME}}*)
++  *-xomb*)
 +    AC_CHECK_HEADERS([sys/types.h locale.h float.h])
 +    GLIBCXX_CHECK_BUILTIN_MATH_SUPPORT
 +    GLIBCXX_CHECK_COMPLEX_MATH_SUPPORT
@@ -29,7 +29,7 @@
      *) echo 'Unknown thread configuration for VxWorks'; exit 1 ;;
    esac
    ;;
-+*-*-{{OSNAME}}*)
++*-*-xomb*)
 +  extra_parts="crtbegin.o crtend.o"
 +  gas=yes
 +  gnu_ld=yes
@@ -43,8 +43,8 @@
  	use_collect2=yes
  	gas=yes
  	;;
-+x86_64-*-{{OSNAME}}*)
-+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h  {{OSNAME}}.h"
++x86_64-*-xomb*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h  xomb.h"
 +	tmake_file="${tmake_file} i386/t-i386elf t-svr4"
 +	use_fixproto=yes
 +	;;
@@ -57,7 +57,7 @@
  	;;
  xscale-*-coff)
  	;;
-+x86_64-*-{{OSNAME}}*)
++x86_64-*-xomb*)
 +	;;
  xstormy16-*-elf)
  	;;

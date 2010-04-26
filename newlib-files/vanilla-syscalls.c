@@ -1,4 +1,3 @@
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
@@ -128,11 +127,6 @@ unlink(char *name) {
 
 int
 write(int file, char *ptr, int len) {
-	//XXX: write to stdout
-	if(file == 1){
-		wconsole(ptr, len);
-	}
-
 	return -1;
 }
 
@@ -152,27 +146,19 @@ extern caddr_t _end;
  */
 caddr_t
 sbrk(int nbytes){
-  static unsigned long long heap_ptr = 0;
+  static caddr_t heap_ptr = NULL;
   caddr_t base;
   
   int temp;
 
-  if(heap_ptr == 0){
-    heap_ptr = HEAP_ADDR;
+  if(heap_ptr == NULL){
+    heap_ptr = (caddr_t)HEAP_ADDR;
   }
 
-  base = (caddr_t)heap_ptr;
+  base = heap_ptr;
 
-	if(nbytes < 0){
-		heap_ptr -= nbytes;
-
-		//XXX: freePage()
-
-		return base;
-	}
-
-  if( (heap_ptr & ~PAGE_MASK) != 0ULL){
-    temp = (PAGE_SIZE - (heap_ptr & ~PAGE_MASK));
+  if(((unsigned long long)heap_ptr & ~PAGE_MASK) != 0ULL){
+    temp = (PAGE_SIZE - ((unsigned long long)heap_ptr & ~PAGE_MASK));
 
     if( nbytes < temp ){
       heap_ptr += nbytes;
@@ -184,14 +170,14 @@ sbrk(int nbytes){
   }
 
   while(nbytes > PAGE_SIZE){
-    allocPage(heap_ptr);
+    //allocPage(heap_ptr);
 		
     nbytes -= (int) PAGE_SIZE;
     heap_ptr = heap_ptr + PAGE_SIZE;
   }
   
   if( nbytes > 0){
-    allocPage(heap_ptr);
+    //allocPage(heap_ptr);
 
     heap_ptr += nbytes;
   }

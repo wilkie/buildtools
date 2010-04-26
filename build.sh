@@ -1,18 +1,19 @@
 OSNAME=xomb
 
 BINUTILS_VER=2.20
-GCC_VER=4.4.3
+GCC_VER=4.5.0
 GMP_VER=5.0.1
 MPFR_VER=2.4.2
 NEWLIB_VER=1.18.0
+MPC_VER=0.8.1
 
 export TARGET=x86_64-pc-${OSNAME}
 export PREFIX=`pwd`/local
 
 # Fix patches with osname
-PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
-perl -pi -e $PERLCMD *.patch
-perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
+#PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
+#perl -pi -e $PERLCMD *.patch
+#perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
 
 mkdir -p build
 mkdir -p local
@@ -44,6 +45,10 @@ echo "FETCH MPFR"
 wget $WFLAGS http://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VER}.tar.gz
 tar -xf mpfr-${MPFR_VER}.tar.gz
 
+echo "FETCH MPC"
+wget $WFLAGS http://www.multiprecision.org/mpc/download/mpc-${MPC_VER}.tar.gz
+tar -xf mpc-${MPC_VER}.tar.gz
+
 echo "FETCH NEWLIB"
 wget $WFLAGS ftp://sources.redhat.com/pub/newlib/newlib-${NEWLIB_VER}.tar.gz
 tar -xf newlib-${NEWLIB_VER}.tar.gz
@@ -62,6 +67,7 @@ echo "PATCH NEWLIB"
 patch -p0 -d newlib-${NEWLIB_VER} < ../newlib.patch || exit
 mkdir -p newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}
 cp -r ../newlib-files/* newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/.
+cp ../newlib-files/vanilla-syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
 
 echo "MAKE OBJECT DIRECTORIES"
 mkdir -p binutils-obj
@@ -69,6 +75,7 @@ mkdir -p gcc-obj
 mkdir -p newlib-obj
 mkdir -p gmp-obj
 mkdir -p mpfr-obj
+mkdir -p mpc-obj
 
 # Compile all packages
 
@@ -95,6 +102,15 @@ make check || exit
 make install || exit
 cd ..
 
+echo "COMPILE MPC"
+cd mpc-obj
+../mpc-${MPC_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-shared || exit
+make || exit
+make check || exit
+make install || exit
+cd ..
+
+
 echo "AUTOCONF GCC"
 cd gcc-${GCC_VER}/libstdc++-v3
 #autoconf || exit
@@ -102,8 +118,7 @@ cd ../..
 
 echo "COMPILE GCC"
 cd gcc-obj
-../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-nls --with-newlib || exit
-#../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++,fortran --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-nls --with-newlib || exit
+../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++,fortran --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --disable-nls --with-newlib || exit
 make all-gcc || exit
 make install-gcc || exit
 cd ..
@@ -130,6 +145,15 @@ cd gcc-obj
 #make install-target-libgcc
 make all-target-libstdc++-v3 || exit
 make install-target-libstdc++-v3 || exit
+make || exit
+make install || exit
+cd ..
+
+echo "PASS-2 COMPILE NEWLIB"
+cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
+
+cd newlib-obj
+#../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
 make || exit
 make install || exit
 cd ..

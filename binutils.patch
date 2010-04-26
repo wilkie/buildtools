@@ -4,7 +4,7 @@
  	      | -kopensolaris* \
  	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
  	      | -aos* | -aros* \
-+		  | -{{OSNAME}}* \
++		  | -xomb* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
@@ -14,7 +14,7 @@
  			targ64_extra_emuls="elf_x86_64 elf_l1om"
  			targ64_extra_libpath=elf_x86_64
  			tdir_i386linux=${targ_alias}aout ;;
-+x86_64-*-{{OSNAME}}*)         targ_emul={{OSNAME}}_x86_64 ;;
++x86_64-*-xomb*)         targ_emul=xomb_x86_64 ;;
 +			
  x86_64-*-linux-*)	targ_emul=elf_x86_64
  			targ_extra_emuls="elf_i386 i386linux elf_l1om"
@@ -25,9 +25,9 @@
  eelf_i386.c: $(srcdir)/emulparams/elf_i386.sh \
    $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_i386 "$(tdir_elf_i386)"
-+e{{OSNAME}}_x86_64.c: $(srcdir)/emulparams/{{OSNAME}}_x86_64.sh \
++exomb_x86_64.c: $(srcdir)/emulparams/xomb_x86_64.sh \
 +  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
-+	${GENSCRIPTS} {{OSNAME}}_x86_64 "$(tdir_{{OSNAME}}_x86_64)"
++	${GENSCRIPTS} xomb_x86_64 "$(tdir_xomb_x86_64)"
  eelf_x86_64.c: $(srcdir)/emulparams/elf_x86_64.sh \
    $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
  	${GENSCRIPTS} elf_x86_64 "$(tdir_elf_x86_64)"
@@ -37,7 +37,7 @@
      targ_selvecs="bfd_elf32_i386_vec bfd_elf64_l1om_vec"
      want64=true
      ;;
-+  x86_64-*-{{OSNAME}}*)
++  x86_64-*-xomb*)
 +    targ_defvec=bfd_elf64_x86_64_vec
 +    targ_selvecs=bfd_elf32_i386_vec
 +    want64=true
@@ -52,7 +52,7 @@
    i386-*-chaos)				fmt=elf ;;
    i386-*-rdos*)				fmt=elf ;;
    i386-*-darwin*)			fmt=macho ;;
-+  i386-*-{{OSNAME}}*)				fmt=elf ;;
++  i386-*-xomb*)				fmt=elf ;;
  
    i860-*-*)				fmt=elf endian=little ;;
  
