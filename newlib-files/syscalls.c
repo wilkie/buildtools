@@ -71,41 +71,99 @@ wait(int *status) {
  *           returns 0 if not. Since we're hooked up to a
  *           serial port, we'll say yes and return a 1.
  */
+
+
+int gibOpen(const char* name, unsigned int nameLen, char readOnly);
+int gibRead(int fd, void* buf, unsigned int len);
+int gibWrite(int fd, void* buf, unsigned int len);
+
+
 int
 isatty(fd)
      int fd;
 {
-  return (1);
-}
-
-
-int
-close(int file) {
-	return -1;
-}
-
-int
-link(char *old, char *new) {
-	errno = EMLINK;
-	return -1;
-}
-
-int
-lseek(int file, int ptr, int dir) {
-	return 0;
+	if(fd < 3){
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 int
 open(const char *name, int flags, ...) {
-	return -1;
+	int nameLen = strlen(name);
+	unsigned char readOnly = 0;
+	int fd;
+
+	if( flags & O_RDONLY ){
+		readOnly = 1;
+	}
+
+	fd = gibOpen(name, nameLen, readOnly);
+
+	if(fd == -1){
+		errno = ENFILE;
+		return -1;
+	}
+
+	printf("new fd assigned: %d\n", fd);
+
+	return fd;
+}
+
+int
+close(int file) {
+	int err = gibClose(file);
+	
+	if(err < 0){
+		errno = EBADF;
+		return -1;
+	}else{
+		return 0;
+	}
 }
 
 int
 read(int file, char *ptr, int len) {
 	// XXX: keyboard support
+	if(file == 0){
+		return -1;
+	}
 
+	int err = gibRead(file, ptr, len);
+
+	if(err == -1){
+		errno = EBADF;
+	}
+
+	return err;
+}
+
+int
+write(int file, char *ptr, int len) {
+	if(file == 1 || file == 2){
+		wconsole(ptr, len);
+
+		return len;
+	}
+
+	int err =  gibWrite(file, ptr, len);
+
+	if(err >= 0){
+		return err;
+	}else{
+		errno = EBADF;
+		return -1;
+	}
+}
+
+
+/* XXX: implement these */
+int
+lseek(int file, int ptr, int dir) {
 	return 0;
 }
+
 
 int 
 fstat(int file, struct stat *st) {
@@ -120,21 +178,17 @@ stat(const char *file, struct stat *st){
 }
 
 int
+link(char *old, char *new) {
+	errno = EMLINK;
+	return -1;
+}
+
+int
 unlink(char *name) {
 	errno = ENOENT;
 	return -1;
 }
 
-
-int
-write(int file, char *ptr, int len) {
-	//XXX: write to stdout
-	if(file == 1){
-		wconsole(ptr, len);
-	}
-
-	return -1;
-}
 
 // --- Memory ---
 
@@ -184,6 +238,7 @@ sbrk(int nbytes){
   }
 
   while(nbytes > PAGE_SIZE){
+		//???: could skip and use allocate-on-fault pagefault handler
     allocPage(heap_ptr);
 		
     nbytes -= (int) PAGE_SIZE;
@@ -191,6 +246,7 @@ sbrk(int nbytes){
   }
   
   if( nbytes > 0){
+		//???: could skip and use allocate-on-fault pagefault handler
     allocPage(heap_ptr);
 
     heap_ptr += nbytes;
