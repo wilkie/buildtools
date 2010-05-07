@@ -81,7 +81,7 @@ mkdir -p mpc-obj
 
 echo "COMPILE BINUTILS"
 cd binutils-obj
-../binutils-${BINUTILS_VER}/configure --target=$TARGET --prefix=$PREFIX || exit
+../binutils-${BINUTILS_VER}/configure --target=$TARGET --prefix=$PREFIX --disable-werror || exit
 make || exit
 make install || exit
 cd ..
