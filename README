@@ -18,6 +18,10 @@ FEATURES:
 
 1. Will compile a complete C and C++ toolchain.
 
+PREREQUISITES:
+
+The gcc tools require m4, autoconf, automake and texinfo (or another source of makeinfo) to successfully compile.
+
 BUGS:
 
 1. Does not compile fortran target.
