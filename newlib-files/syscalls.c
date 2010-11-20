@@ -76,6 +76,7 @@ wait(int *status) {
 int gibOpen(const char* name, unsigned int nameLen, char readOnly);
 int gibRead(int fd, void* buf, unsigned int len);
 int gibWrite(int fd, void* buf, unsigned int len);
+unsigned long long initHeap();
 
 
 int
@@ -191,13 +192,8 @@ unlink(char *name) {
 
 
 // --- Memory ---
-
-/* _end is set in the linker command file */
-extern caddr_t _end;
-
 #define PAGE_SIZE 4096ULL
 #define PAGE_MASK 0xFFFFFFFFFFFFF000ULL
-#define HEAP_ADDR (((unsigned long long)&_end + PAGE_SIZE) & PAGE_MASK)
 
 /*
  * sbrk -- changes heap size size. Get nbytes more
@@ -212,16 +208,13 @@ sbrk(int nbytes){
   int temp;
 
   if(heap_ptr == 0){
-    heap_ptr = HEAP_ADDR;
+    heap_ptr = initHeap();
   }
 
   base = (caddr_t)heap_ptr;
 
 	if(nbytes < 0){
 		heap_ptr -= nbytes;
-
-		//XXX: freePage()
-
 		return base;
 	}
 
@@ -238,38 +231,16 @@ sbrk(int nbytes){
   }
 
   while(nbytes > PAGE_SIZE){
-		//???: could skip and use allocate-on-fault pagefault handler
-    allocPage(heap_ptr);
-		
     nbytes -= (int) PAGE_SIZE;
     heap_ptr = heap_ptr + PAGE_SIZE;
   }
   
   if( nbytes > 0){
-		//???: could skip and use allocate-on-fault pagefault handler
-    allocPage(heap_ptr);
-
     heap_ptr += nbytes;
   }
 
 
   return base;
-	/*
-  static caddr_t heap_ptr = NULL;
-  caddr_t        base;
-
-  if (heap_ptr == NULL) {
-    heap_ptr = (caddr_t)&_end;
-  }
-
-  if ((RAMSIZE - heap_ptr) >= 0) {
-    base = heap_ptr;
-    heap_ptr += nbytes;
-    return (base);
-  } else {
-    errno = ENOMEM;
-    return ((caddr_t)-1);
-		}*/
 }
 
 
