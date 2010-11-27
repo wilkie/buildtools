@@ -107,8 +107,6 @@ open(const char *name, int flags, ...) {
 		return -1;
 	}
 
-	printf("new fd assigned: %d\n", fd);
-
 	return fd;
 }
 

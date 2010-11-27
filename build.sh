@@ -132,7 +132,7 @@ cd ../../../../..
 
 echo "CONFIGURE NEWLIB"
 cd newlib-obj
-../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
+../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX -enable-newlib-hw-fp || exit
 
 echo "COMPILE NEWLIB"
 make || exit
