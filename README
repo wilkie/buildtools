@@ -1,14 +1,18 @@
+There are two main branches:
+master - which is meant for the OSdev community and OS developers at large
+YOU ARE HERE-> xomb - builds a xomb specific toolchain and can be a model for how to fill in newlib-files/ stubs
+
 This script will build general buildtools for a 64 bit elf target. It will compile:
 
 binutils (ld, bfd, gas)
 gmp
 mpfr
-gcc (gcc, g++)
+gcc (gcc, g++, gfortran)
 newlib
 
 USAGE:
 
-To use this, add OS specific hooks to newlib, edit build.sh line 1 and give the name of the os target, and run
+To use this, optionally edit XOmB specific hooks in newlib-files/, then run:
 
 ./build.sh
 
@@ -16,12 +20,8 @@ This will build the tools in the 'local' directory.
 
 FEATURES:
 
-1. Will compile a complete C and C++ toolchain.
+1. Will compile a complete C, C++ and fortran toolchain.
 
 PREREQUISITES:
 
 The gcc tools require m4, autoconf, automake and texinfo (or another source of makeinfo) to successfully compile.
-
-BUGS:
-
-1. Does not compile fortran target.
