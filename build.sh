@@ -119,8 +119,8 @@ cd ../..
 
 echo "COMPILE GCC"
 cd gcc-obj
-../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++,fortran --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --disable-nls --with-newlib || exit
-make all-gcc || exit
+../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --disable-nls --with-newlib || exit
+make -j $NCPU all-gcc || exit
 make install-gcc || exit
 cd ..
 
@@ -150,11 +150,11 @@ make -j $NCPU || exit
 make install || exit
 cd ..
 
-echo "PASS-2 COMPILE NEWLIB"
-cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
+#echo "PASS-2 COMPILE NEWLIB"
+#cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
 
-cd newlib-obj
+#cd newlib-obj
 #../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
-make || exit
-make install || exit
-cd ..
+#make || exit
+#make install || exit
+#cd ..
