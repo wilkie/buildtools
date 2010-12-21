@@ -83,14 +83,14 @@ mkdir -p mpc-obj
 echo "COMPILE BINUTILS"
 cd binutils-obj
 ../binutils-${BINUTILS_VER}/configure --target=$TARGET --prefix=$PREFIX --disable-werror || exit
-make -j $NCPU|| exit
+make -j$NCPU|| exit
 make install || exit
 cd ..
 
 echo "COMPILE GMP"
 cd gmp-obj
 ../gmp-${GMP_VER}/configure --prefix=$PREFIX --disable-shared || exit
-make -j $NCPU || exit
+make -j$NCPU || exit
 make check || exit
 make install || exit
 cd ..
@@ -98,7 +98,7 @@ cd ..
 echo "COMPILE MPFR"
 cd mpfr-obj
 ../mpfr-${MPFR_VER}/configure --prefix=$PREFIX --with-gmp=$PREFIX --disable-shared
-make -j $NCPU || exit
+make -j$NCPU || exit
 make check || exit
 make install || exit
 cd ..
@@ -106,7 +106,7 @@ cd ..
 echo "COMPILE MPC"
 cd mpc-obj
 ../mpc-${MPC_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-shared || exit
-make -j $NCPU || exit
+make -j$NCPU || exit
 make check || exit
 make install || exit
 cd ..
@@ -120,7 +120,7 @@ cd ../..
 echo "COMPILE GCC"
 cd gcc-obj
 ../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --disable-nls --with-newlib || exit
-make -j $NCPU all-gcc || exit
+make -j$NCPU all-gcc || exit
 make install-gcc || exit
 cd ..
 
@@ -136,7 +136,7 @@ cd newlib-obj
 ../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX -enable-newlib-hw-fp || exit
 
 echo "COMPILE NEWLIB"
-make -j $NCPU || exit
+make -j$NCPU || exit
 make install || exit
 cd ..
 
@@ -144,9 +144,9 @@ echo "PASS-2 COMPILE GCC"
 cd gcc-obj
 #make all-target-libgcc
 #make install-target-libgcc
-make -j $NCPU all-target-libstdc++-v3 || exit
+make -j$NCPU all-target-libstdc++-v3 || exit
 make install-target-libstdc++-v3 || exit
-make -j $NCPU || exit
+make -j$NCPU || exit
 make install || exit
 cd ..
 
