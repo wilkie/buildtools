@@ -150,11 +150,11 @@ make -j $NCPU || exit
 make install || exit
 cd ..
 
-#echo "PASS-2 COMPILE NEWLIB"
-#cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
+echo "PASS-2 COMPILE NEWLIB"
+cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
 
-#cd newlib-obj
-#../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
-#make || exit
-#make install || exit
-#cd ..
+cd newlib-obj
+../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
+make || exit
+make install || exit
+cd ..
