@@ -7,6 +7,8 @@
 #include <sys/time.h>
 #include <stdio.h>
 
+#include <stdbool.h>
+
 //#include <_ansi.h>
 #include <errno.h>
 
@@ -93,11 +95,12 @@ isatty(fd)
 int
 open(const char *name, int flags, ...) {
 	int nameLen = strlen(name);
-	unsigned char readOnly = 0;
+	bool readOnly = false;
 	int fd;
 
-	if( flags & O_RDONLY ){
-		readOnly = 1;
+	// O_RDONLY isn't Quite a flag, is defined as 0 
+	if( flags == O_RDONLY ){
+		readOnly = true;
 	}
 
 	fd = gibOpen(name, nameLen, readOnly);
@@ -125,7 +128,7 @@ close(int file) {
 int
 read(int file, char *ptr, int len) {
 	// XXX: keyboard support
-	if(file == 0){
+	if(file < 3){
 		return -1;
 	}
 
