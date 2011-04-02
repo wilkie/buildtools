@@ -4,7 +4,16 @@ extern void initC2D();
 
 
 int _Dmain(int argc, char** argv){
+	unsigned long long *origin, *target;
+	int i;
+
 	initC2D();
+
+	for(i = 0; i < argc; i++){
+		origin = ((unsigned long long*)argv) + ((i * 2) + 1);
+		target = ((unsigned long long*)argv) + i;
+		*target = *origin;
+	}
 
 	return main(argc, argv);
 }
