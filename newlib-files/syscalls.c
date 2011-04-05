@@ -75,7 +75,7 @@ wait(int *status) {
  */
 
 
-int gibOpen(const char* name, unsigned int nameLen, char readOnly);
+int gibOpen(const char* name, unsigned int nameLen, bool readOnly, bool append, bool create);
 int gibRead(int fd, void* buf, unsigned int len);
 int gibWrite(int fd, void* buf, unsigned int len);
 unsigned long long initHeap();
@@ -95,7 +95,7 @@ isatty(fd)
 int
 open(const char *name, int flags, ...) {
 	int nameLen = strlen(name);
-	bool readOnly = false;
+	bool readOnly = false,  append = false, create = true;
 	int fd;
 
 	// O_RDONLY isn't Quite a flag, is defined as 0 
@@ -103,7 +103,7 @@ open(const char *name, int flags, ...) {
 		readOnly = true;
 	}
 
-	fd = gibOpen(name, nameLen, readOnly);
+	fd = gibOpen(name, nameLen, readOnly, append, create);
 
 	if(fd == -1){
 		errno = ENFILE;
