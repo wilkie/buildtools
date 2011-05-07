@@ -1,0 +1,134 @@
+--- a/autoconf/config.sub	2011-05-07 00:54:06.000000000 -0400
++++ b/autoconf/config.sub	2011-05-07 01:17:02.000000000 -0400
+@@ -1281,6 +1281,7 @@ case $os in
+ 	      | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+@@ -1329,6 +1330,9 @@ case $os in
+ 	-linux*)
+ 		os=`echo $os | sed -e 's|linux|linux-gnu|'`
+ 		;;
++	-xomb*)
++		os=`echo $os | sed -e 's|linux|linux-gnu|'`
++		;;
+ 	-sunos5*)
+ 		os=`echo $os | sed -e 's|sunos5|solaris2|'`
+ 		;;
+--- llvm-pristine/autoconf/configure.ac	2011-05-07 00:54:06.000000000 -0400
++++ llvm-2.8/autoconf/configure.ac	2011-05-07 00:57:48.000000000 -0400
+@@ -198,6 +198,11 @@ AC_CACHE_CHECK([type of operating system
+     llvm_cv_no_link_all_option="-Wl,--no-whole-archive"
+     llvm_cv_os_type="Linux"
+     llvm_cv_platform_type="Unix" ;;
++  *-*-xomb*)
++    llvm_cv_link_all_option="-Wl,--whole-archive"
++    llvm_cv_no_link_all_option="-Wl,--no-whole-archive"
++    llvm_cv_os_type="Linux"
++    llvm_cv_platform_type="Unix" ;;
+   *-*-solaris*)
+     llvm_cv_link_all_option="-Wl,-z,allextract"
+     llvm_cv_no_link_all_option="-Wl,-z,defaultextract"
+@@ -267,6 +272,8 @@ AC_CACHE_CHECK([type of operating system
+     llvm_cv_target_os_type="Interix" ;;
+   *-*-linux*)
+     llvm_cv_target_os_type="Linux" ;;
++  *-*-xomb*)
++    llvm_cv_target_os_type="Linux" ;;
+   *-*-solaris*)
+     llvm_cv_target_os_type="SunOS" ;;
+   *-*-auroraux*)
+--- llvm-pristine/configure	2011-05-07 00:54:06.000000000 -0400
++++ llvm-2.8/configure	2011-05-07 01:14:55.000000000 -0400
+@@ -2205,6 +2205,11 @@ else
+     llvm_cv_no_link_all_option="-Wl,--no-whole-archive"
+     llvm_cv_os_type="Linux"
+     llvm_cv_platform_type="Unix" ;;
++  *-*-xomb*)
++    llvm_cv_link_all_option="-Wl,--whole-archive"
++    llvm_cv_no_link_all_option="-Wl,--no-whole-archive"
++    llvm_cv_os_type="Linux"
++    llvm_cv_platform_type="Unix" ;;
+   *-*-solaris*)
+     llvm_cv_link_all_option="-Wl,-z,allextract"
+     llvm_cv_no_link_all_option="-Wl,-z,defaultextract"
+@@ -2280,6 +2285,8 @@ else
+     llvm_cv_target_os_type="Interix" ;;
+   *-*-linux*)
+     llvm_cv_target_os_type="Linux" ;;
++  *-*-xomb*)
++    llvm_cv_target_os_type="Linux" ;;
+   *-*-solaris*)
+     llvm_cv_target_os_type="SunOS" ;;
+   *-*-auroraux*)
+@@ -2349,7 +2356,7 @@ if test "${llvm_cv_target_arch+set}" = s
+ else
+   case $target in
+   i?86-*)                 llvm_cv_target_arch="x86" ;;
+-  amd64-* | x86_64-*)     llvm_cv_target_arch="x86_64" ;;
++  amd64-* | x86_64-* | xomb*)     llvm_cv_target_arch="x86_64" ;;
+   sparc*-*)               llvm_cv_target_arch="Sparc" ;;
+   powerpc*-*)             llvm_cv_target_arch="PowerPC" ;;
+   alpha*-*)               llvm_cv_target_arch="Alpha" ;;
+@@ -10033,6 +10040,35 @@ linux*)
+   # assume the GNU/Linux dynamic linker is in use.
+   dynamic_linker='GNU/Linux ld.so'
+   ;;
++# This must be Linux ELF.
++xomb*)
++  version_type=linux
++  need_lib_prefix=no
++  need_version=no
++  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
++  soname_spec='${libname}${release}${shared_ext}$major'
++  finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
++  shlibpath_var=LD_LIBRARY_PATH
++  shlibpath_overrides_runpath=no
++  # This implies no fast_install, which is unacceptable.
++  # Some rework will be needed to allow for fast_install
++  # before this can be enabled.
++  hardcode_into_libs=yes
++
++  # Append ld.so.conf contents to the search path
++  if test -f /etc/ld.so.conf; then
++    lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;/^$/d' | tr '\n' ' '`
++    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
++  fi
++
++  # We used to test for /lib/ld.so.1 and disable shared libraries on
++  # powerpc, because MkLinux only supported shared libraries with the
++  # GNU dynamic linker.  Since this was broken with cross compilers,
++  # most powerpc-linux boxes support dynamic linking these days and
++  # people can always --disable-shared, the test was removed, and we
++  # assume the GNU/Linux dynamic linker is in use.
++  dynamic_linker='GNU/Linux ld.so'
++  ;;
+ 
+ knetbsd*-gnu)
+   version_type=linux
+@@ -10370,6 +10406,13 @@ linux*)
+     lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([^ ]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([^ ]*\) \([^ ]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
+   fi
+   ;;
++xomb*)
++  if test "$host_cpu" = ia64; then
++    symcode='[ABCDGIRSTW]'
++    lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
++    lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([^ ]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([^ ]*\) \([^ ]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
++  fi
++  ;;
+ irix* | nonstopux*)
+   symcode='[BCDEGRST]'
+   ;;
+@@ -11512,7 +11555,7 @@ else
+     # If you are looking for one http://www.opendarwin.org/projects/dlcompat
+     libltdl_cv_sys_dlopen_deplibs=yes
+     ;;
+-  gnu* | linux* | kfreebsd*-gnu | knetbsd*-gnu)
++  gnu* | linux* | kfreebsd*-gnu | knetbsd*-gnu | xomb*)
+     # GNU and its variants, using gnu ld.so (Glibc)
+     libltdl_cv_sys_dlopen_deplibs=yes
+     ;;
