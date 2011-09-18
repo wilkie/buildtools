@@ -12,8 +12,9 @@
 //#include <_ansi.h>
 #include <errno.h>
 
-// --- Process Control ---
+// first, the 13 required calls
 
+// --- Process Control ---
 int
 _exit(int val){
   exit(val);
@@ -37,7 +38,7 @@ getpid()
 }
 
 
-int 
+int
 fork(void) {
 	errno = ENOTSUP;
 	return -1;
@@ -98,7 +99,7 @@ open(const char *name, int flags, ...) {
 	bool readOnly = false,  append = false, create = true;
 	int fd;
 
-	// O_RDONLY isn't Quite a flag, is defined as 0 
+	// O_RDONLY isn't Quite a flag, is defined as 0
 	if( flags == O_RDONLY ){
 		readOnly = true;
 	}
@@ -116,7 +117,7 @@ open(const char *name, int flags, ...) {
 int
 close(int file) {
 	int err = gibClose(file);
-	
+
 	if(err < 0){
 		errno = EBADF;
 		return -1;
@@ -167,7 +168,7 @@ lseek(int file, int ptr, int dir) {
 }
 
 
-int 
+int
 fstat(int file, struct stat *st) {
 	st->st_mode = S_IFCHR;
 	return 0;
@@ -205,7 +206,7 @@ caddr_t
 sbrk(int nbytes){
   static unsigned long long heap_ptr = 0;
   caddr_t base;
-  
+
   int temp;
 
   if(heap_ptr == 0){
@@ -235,7 +236,7 @@ sbrk(int nbytes){
     nbytes -= (int) PAGE_SIZE;
     heap_ptr = heap_ptr + PAGE_SIZE;
   }
-  
+
   if( nbytes > 0){
     heap_ptr += nbytes;
   }
@@ -250,3 +251,46 @@ sbrk(int nbytes){
 	 return -1;
  }
 
+
+// some additional functions that aren't provided by default
+
+// missing deps: fnctl, umask, chmod, access, lstat, pathconf, utime
+
+int fcntl(int fd, int cmd, ... /* arg */ ){
+	errno = ENOSYS;
+  return -1;
+}
+
+mode_t umask(mode_t mask){
+	return 0777;
+}
+
+int chmod(const char *path, mode_t mode){
+	errno = ENOSYS;
+  return -1;
+}
+
+int chown(const char *path, uid_t owner, gid_t group){
+	errno = ENOSYS;
+  return -1;
+}
+
+int access(const char *pathname, int mode){
+	errno = ENOSYS;
+  return -1;
+}
+
+int lstat(const char *path, struct stat *buf){
+	return stat(path, buf);
+}
+
+long pathconf(char *path, int name){
+	// no limits
+	return -1;
+}
+
+int utime(const char *filename, const struct utimbuf *times){
+	// I ain't tellin'
+	errno = EPERM;
+  return -1;
+}
