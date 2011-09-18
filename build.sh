@@ -1,3 +1,17 @@
+
+# --- Argument processing ---
+
+for arg in $@; do
+		case $arg in
+				--clean) rm -rf local/ build/*/;;
+				--notest) NOTEST=1;;
+		esac
+done
+
+
+# --- Variables ---
+
+# EDIT THESE
 OSNAME=xomb
 NCPU=4
 
@@ -7,24 +21,32 @@ GMP_VER=5.0.2
 MPFR_VER=3.0.1
 NEWLIB_VER=1.19.0
 MPC_VER=0.9
+# NO M0AR EDITS PLZ
 
-export TARGET=x86_64-pc-${OSNAME}
-export PREFIX=`pwd`/local
+TARGET=x86_64-pc-${OSNAME}
+PREFIX=`pwd`/local
 
-# Fix patches with osname
-#PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
-#perl -pi -e $PERLCMD *.patch
-#perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
+export PATH=$PREFIX/bin:$PATH
+
+WFLAGS=-c
+
+
+# --- Directory creation ---
 
 mkdir -p build
 mkdir -p local
 cd build
 
-WFLAGS=-c
+echo "MAKE OBJECT DIRECTORIES"
+mkdir -p binutils-obj
+mkdir -p gcc-obj
+mkdir -p newlib-obj
+mkdir -p gmp-obj
+mkdir -p mpfr-obj
+mkdir -p mpc-obj
 
-export PATH=$PREFIX/bin:$PATH
 
-# Fetch each package
+# --- Fetch and extract each package ---
 
 echo "FETCH BINUTILS"
 wget $WFLAGS http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2
@@ -54,7 +76,13 @@ echo "FETCH NEWLIB"
 wget $WFLAGS ftp://sources.redhat.com/pub/newlib/newlib-${NEWLIB_VER}.tar.gz
 tar -xf newlib-${NEWLIB_VER}.tar.gz
 
-# Patch and push new code into each package
+
+# --- Patch and push new code into each package ---
+
+# Fix patches with osname
+#PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
+#perl -pi -e $PERLCMD *.patch
+#perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
 
 echo "PATCH BINUTILS"
 patch -p0 -d binutils-${BINUTILS_VER} < ../binutils.patch || exit
@@ -70,15 +98,8 @@ mkdir -p newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}
 cp -r ../newlib-files/* newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/.
 cp ../newlib-files/vanilla-syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
 
-echo "MAKE OBJECT DIRECTORIES"
-mkdir -p binutils-obj
-mkdir -p gcc-obj
-mkdir -p newlib-obj
-mkdir -p gmp-obj
-mkdir -p mpfr-obj
-mkdir -p mpc-obj
 
-# Compile all packages
+# --- Compile all packages ---
 
 echo "COMPILE BINUTILS"
 cd binutils-obj
@@ -91,7 +112,9 @@ echo "COMPILE GMP"
 cd gmp-obj
 ../gmp-${GMP_VER}/configure --prefix=$PREFIX --disable-shared || exit
 make -j$NCPU || exit
-make check || exit
+if [ $NOTEST -ne 1 ]; then
+		make check || exit
+fi
 make install || exit
 cd ..
 
@@ -99,7 +122,9 @@ echo "COMPILE MPFR"
 cd mpfr-obj
 ../mpfr-${MPFR_VER}/configure --prefix=$PREFIX --with-gmp=$PREFIX --disable-shared
 make -j$NCPU || exit
-make check || exit
+if [ $NOTEST -ne 1 ]; then
+		make check || exit
+fi
 make install || exit
 cd ..
 
@@ -107,7 +132,9 @@ echo "COMPILE MPC"
 cd mpc-obj
 ../mpc-${MPC_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX --disable-shared || exit
 make -j$NCPU || exit
-make check || exit
+if [ $NOTEST -ne 1 ]; then
+		make check || exit
+fi
 make install || exit
 cd ..
 
