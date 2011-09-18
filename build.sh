@@ -1,8 +1,8 @@
 OSNAME=xomb
 NCPU=4
 
-BINUTILS_VER=2.21
-GCC_VER=4.6.0
+BINUTILS_VER=2.21.1
+GCC_VER=4.6.1
 GMP_VER=5.0.2
 MPFR_VER=3.0.1
 NEWLIB_VER=1.19.0
@@ -27,8 +27,8 @@ export PATH=$PREFIX/bin:$PATH
 # Fetch each package
 
 echo "FETCH BINUTILS"
-wget $WFLAGS http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.gz 
-tar -xf binutils-${BINUTILS_VER}.tar.gz
+wget $WFLAGS http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2
+tar -xf binutils-${BINUTILS_VER}.tar.bz2
 
 echo "FETCH GCC"
 wget $WFLAGS http://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-core-${GCC_VER}.tar.gz
