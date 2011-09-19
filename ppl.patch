@@ -1,0 +1,22 @@
+diff -rupN ../../ppl-0.11.2/config.sub ./config.sub
+--- ../../ppl-0.11.2/config.sub	2011-02-27 04:07:47.000000000 -0500
++++ ./config.sub	2011-09-30 22:36:38.336020289 -0400
+@@ -1306,6 +1306,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -rupN ../../ppl-0.11.2/Watchdog/config.sub ./Watchdog/config.sub
+--- ../../ppl-0.11.2/Watchdog/config.sub	2011-02-27 04:07:47.000000000 -0500
++++ ./Watchdog/config.sub	2011-09-30 22:35:51.082687892 -0400
+@@ -1306,6 +1306,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \

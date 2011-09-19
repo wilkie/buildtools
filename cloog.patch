@@ -1,0 +1,22 @@
+diff -rupN ../../cloog-0.16.3/autoconf/config.sub ./autoconf/config.sub
+--- ../../cloog-0.16.3/autoconf/config.sub	2011-09-30 23:58:48.765922513 -0400
++++ ./autoconf/config.sub	2011-10-01 00:15:25.789236074 -0400
+@@ -1298,6 +1298,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -rupN ../../cloog-0.16.3/isl/config.sub ./isl/config.sub
+--- ../../cloog-0.16.3/isl/config.sub	2011-09-30 23:58:48.442589186 -0400
++++ ./isl/config.sub	2011-10-01 00:29:19.405886210 -0400
+@@ -1298,6 +1298,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
