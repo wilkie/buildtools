@@ -12,10 +12,10 @@ function setphase {
 # --- Argument processing ---
 NOTEST=1
 EXTRAS=1
-
+CLEAN=0
 for arg in $@; do
 		case $arg in
-				--clean) rm -rf local/ build/*/;;
+				--clean)  CLEAN=1;;
 				--notest) NOTEST=1;;
 				--extras) EXTRA=1;;
 		esac
@@ -39,7 +39,11 @@ CLOOG_VER=0.16.3
 # NO M0AR EDITS PLZ
 
 TARGET=x86_64-pc-${OSNAME}
-PREFIX=`pwd`/local
+PREFIX=`pwd`/${OSNAME}-local
+
+if [ $CLEAN -eq 1 ]; then
+		rm -rf $PREFIX build/*/
+fi
 
 #export PATH=$PREFIX/bin:$PATH
 
@@ -107,7 +111,7 @@ export OBJDUMP_FOR_TARGET=$TARGET-objdump
 # --- Directory creation ---
 
 mkdir -p build
-mkdir -p local
+mkdir -p $PREFIX
 cd build
 
 setphase "MAKE OBJECT DIRECTORIES"
