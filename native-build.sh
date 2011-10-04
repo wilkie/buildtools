@@ -50,8 +50,8 @@ fi
 WFLAGS=-c
 
 
-XOMBPATH=/home/wolfwood/repos/xomb
-CROSSPATH=/home/wolfwood/repos/buildtools/local
+XOMBPATH=`pwd`/../xomb
+CROSSPATH=`pwd`/local
 
 if [ ! -d $XOMBPATH ]; then
 		XOMBPATH=`pwd`/../xomb
