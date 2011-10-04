@@ -10,7 +10,7 @@
  	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
 --- ../../gcc-4.3.3/libstdc++-v3/crossconfig.m4	2008-01-14 19:15:43.000000000 -0500
 +++ libstdc++-v3/crossconfig.m4	2010-04-03 16:35:47.000000000 -0400
-@@ -393,6 +393,12 @@ case "${host}" in
+@@ -393,6 +393,13 @@ case "${host}" in
        AC_DEFINE(HAVE_ISNANL)
      fi
      ;;
@@ -19,6 +19,7 @@
 +    GLIBCXX_CHECK_BUILTIN_MATH_SUPPORT
 +    GLIBCXX_CHECK_COMPLEX_MATH_SUPPORT
 +    GLIBCXX_CHECK_STDLIB_SUPPORT
++    GLIBCXX_CHECK_LINKER_FEATURES
 +    ;;
    *-vxworks)
      AC_DEFINE(HAVE_MMAP)
@@ -39,7 +40,7 @@
  *-*-elf)
    # Assume that newlib is being used and so __cxa_atexit is provided.
    default_use_cxa_atexit=yes
-@@ -1070,6 +1077,11 @@ hppa[12]*-*-hpux11*)
+@@ -1070,5 +1077,10 @@ hppa[12]*-*-hpux11*)
  	use_collect2=yes
  	gas=yes
  	;;
@@ -50,14 +51,15 @@
 +	;;
  i[34567]86-*-darwin*)
  	need_64bit_hwint=yes
- 
+
 --- ../../gcc-4.3.3/libgcc/config.host	2008-11-20 12:09:53.000000000 -0500
 +++ libgcc/config.host	2010-04-03 16:35:47.000000000 -0400
-@@ -637,6 +637,8 @@ xscale-*-elf)
+@@ -637,6 +637,9 @@ xscale-*-elf)
  	;;
  xscale-*-coff)
  	;;
 +x86_64-*-xomb*)
++ extra_parts="crtbegin.o crtend.o"
 +	;;
  xstormy16-*-elf)
  	;;

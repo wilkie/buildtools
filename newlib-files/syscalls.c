@@ -17,12 +17,12 @@
 // --- Process Control ---
 int
 _exit(int val){
-  exit(val);
+  __exit(val);
   return (-1);
 }
 
 int
-execve(char *name, char **argv, char **env) {
+_execve(char *name, char **argv, char **env) {
 	errno = ENOMEM;
 	return -1;
 }
@@ -83,7 +83,7 @@ unsigned long long initHeap();
 
 
 int
-isatty(fd)
+_isatty(fd)
      int fd;
 {
 	if(fd < 3){
@@ -254,9 +254,11 @@ sbrk(int nbytes){
 
 // some additional functions that aren't provided by default
 
-// missing deps: fnctl, umask, chmod, access, lstat, pathconf, utime
+static int fail();
 
-int fcntl(int fd, int cmd, ... /* arg */ ){
+// missing binutils deps: fnctl, umask, chmod, access, lstat, pathconf, utime
+
+int fcntl(int fd, int cmd, ... ){
 	errno = ENOSYS;
   return -1;
 }
@@ -294,3 +296,49 @@ int utime(const char *filename, const struct utimbuf *times){
 	errno = EPERM;
   return -1;
 }
+
+// missing gcc deps: sleep, alarm, pipe, dup2, execvp
+
+unsigned int sleep(unsigned int seconds){
+	return 0;
+}
+
+unsigned int alarm(unsigned int seconds){
+	return 0;
+}
+
+int pipe(int pipefd[2]){
+	return fail();
+}
+
+int dup(int oldfd){
+	// XXX: find a free fd
+	return dup2(oldfd, 7);
+}
+
+int dup2(int oldfd, int newfd){
+	return fail();
+}
+
+int getdents(unsigned int fd, struct linux_dirent *dirp,
+						 unsigned int count){
+	return fail();
+}
+
+long sysconf(int name){
+	return fail();
+}
+
+int chdir(const char *path){
+	return fail();
+}
+
+int getrusage(int who, struct rusage *usage){
+	return fail();
+}
+
+int fail(){
+	errno = ENOSYS;
+  return -1;
+}
+
