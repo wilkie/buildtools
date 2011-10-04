@@ -103,14 +103,15 @@ cp ../newlib-files/vanilla-syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSN
 
 echo "COMPILE BINUTILS"
 cd binutils-obj
-../binutils-${BINUTILS_VER}/configure --target=$TARGET --prefix=$PREFIX --disable-werror || exit
-make -j$NCPU|| exit
+../binutils-${BINUTILS_VER}/configure --target=$TARGET --prefix=$PREFIX --disable-werror --enable-gold --enable-plugins || exit
+make -j$NCPU all-gold || exit
+make -j$NCPU || exit
 make install || exit
 cd ..
 
 echo "COMPILE GMP"
 cd gmp-obj
-../gmp-${GMP_VER}/configure --prefix=$PREFIX --disable-shared || exit
+../gmp-${GMP_VER}/configure --prefix=$PREFIX --enable-cxx --disable-shared || exit
 make -j$NCPU || exit
 if [ $NOTEST -ne 1 ]; then
 		make check || exit
@@ -146,7 +147,7 @@ cd ../..
 
 echo "COMPILE GCC"
 cd gcc-obj
-../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --disable-nls --with-newlib || exit
+../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --without-headers --disable-nls --with-newlib || exit
 make -j$NCPU all-gcc || exit
 make install-gcc || exit
 cd ..
@@ -173,7 +174,7 @@ cd gcc-obj
 #make install-target-libgcc
 make -j$NCPU all-target-libstdc++-v3 || exit
 make install-target-libstdc++-v3 || exit
-make -j$NCPU || exit
+make -j$NCPU all || exit
 make install || exit
 cd ..
 
@@ -181,7 +182,7 @@ echo "PASS-2 COMPILE NEWLIB"
 cp ../newlib-files/syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
 
 cd newlib-obj
-../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX || exit
-make || exit
+../newlib-${NEWLIB_VER}/configure --target=$TARGET --prefix=$PREFIX --with-gmp=$PREFIX --with-mpfr=$PREFIX -enable-newlib-hw-fp || exit
+make -j$NCPU || exit
 make install || exit
 cd ..
