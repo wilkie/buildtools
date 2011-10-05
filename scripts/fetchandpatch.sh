@@ -48,33 +48,23 @@ fi
 # diff -rupN
 
 
-setphase "PATCH BINUTILS"
-patch -p0 -d binutils-${BINUTILS_VER} < ../binutils.patch || exit
+doPatch binutils
 cp ../binutils-files/ld/emulparams/os_x86_64.sh binutils-${BINUTILS_VER}/ld/emulparams/${OSNAME}_x86_64.sh
 
 setphase "PATCH GMP"
-patch -p1 -d gmp-${GMP_VER} < ../gmp.patch || exit
+patch -p1 -d gmp-${GMP_VER} < ../patches/gmp.patch || exit
 
-setphase "PATCH MPFR"
-patch -p0 -d mpfr-${MPFR_VER} < ../mpfr.patch || exit
-
-setphase "PATCH MPC"
-patch -p0 -d mpc-${MPC_VER} < ../mpc.patch || exit
-
+doPatch mpfr
+doPatch mpc
 if [ $EXTRAS -eq 1 ]; then
-setphase "PATCH PPL"
-patch -p0 -d ppl-${PPL_VER} < ../ppl.patch || exit
-
-setphase "PATCH CLOOG"
-patch -p0 -d cloog-${CLOOG_VER} < ../cloog.patch || exit
+doPatch ppl
+doPatch cloog
 fi
 
-setphase "PATCH GCC"
-patch -p0 -d gcc-${GCC_VER} < ../gcc.patch || exit
+doPatch gcc
 cp ../gcc-files/gcc/config/os.h gcc-${GCC_VER}/gcc/config/${OSNAME}.h
 
-setphase "PATCH NEWLIB"
-patch -p0 -d newlib-${NEWLIB_VER} < ../newlib.patch || exit
+doPatch newlib
 mkdir -p newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}
 cp -r ../newlib-files/* newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/.
 cp ../newlib-files/vanilla-syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c

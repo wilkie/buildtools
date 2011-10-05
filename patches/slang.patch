@@ -1,0 +1,11 @@
+diff -rupN ../../slang-2.2.4/autoconf/config.sub ./autoconf/config.sub
+--- ../../slang-2.2.4/autoconf/config.sub	2011-10-04 16:21:38.511715949 -0400
++++ ./autoconf/config.sub	2011-10-04 16:22:31.498379427 -0400
+@@ -1290,6 +1290,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \

@@ -29,56 +29,7 @@ mkdir -p mpc-obj
 
 
 # --- Fetch and extract each package ---
-
-setphase "FETCH BINUTILS"
-wget $WFLAGS http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VER}.tar.bz2
-tar -xf binutils-${BINUTILS_VER}.tar.bz2
-
-setphase "FETCH GCC"
-wget $WFLAGS http://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-core-${GCC_VER}.tar.gz
-tar -xf gcc-core-${GCC_VER}.tar.gz
-wget $WFLAGS http://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-g++-${GCC_VER}.tar.gz
-tar -xf gcc-g++-${GCC_VER}.tar.gz
-wget $WFLAGS http://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-fortran-${GCC_VER}.tar.gz
-tar -xf gcc-fortran-${GCC_VER}.tar.gz
-
-setphase "FETCH GMP"
-wget $WFLAGS http://ftp.gnu.org/gnu/gmp/gmp-${GMP_VER}.tar.gz
-tar -xf gmp-${GMP_VER}.tar.gz
-
-setphase "FETCH MPFR"
-wget $WFLAGS http://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VER}.tar.gz
-tar -xf mpfr-${MPFR_VER}.tar.gz
-
-setphase "FETCH MPC"
-wget $WFLAGS http://www.multiprecision.org/mpc/download/mpc-${MPC_VER}.tar.gz
-tar -xf mpc-${MPC_VER}.tar.gz
-
-setphase "FETCH NEWLIB"
-wget $WFLAGS ftp://sources.redhat.com/pub/newlib/newlib-${NEWLIB_VER}.tar.gz
-tar -xf newlib-${NEWLIB_VER}.tar.gz
-
-
-# --- Patch and push new code into each package ---
-
-# Fix patches with osname
-#PERLCMD="s/{{OSNAME}}/${OSNAME}/g"
-#perl -pi -e $PERLCMD *.patch
-#perl -pi -e $PERLCMD gcc-files/gcc/config/os.h
-
-setphase "PATCH BINUTILS"
-patch -p0 -d binutils-${BINUTILS_VER} < ../binutils.patch || exit
-cp ../binutils-files/ld/emulparams/os_x86_64.sh binutils-${BINUTILS_VER}/ld/emulparams/${OSNAME}_x86_64.sh
-
-setphase "PATCH GCC"
-patch -p0 -d gcc-${GCC_VER} < ../gcc.patch || exit
-cp ../gcc-files/gcc/config/os.h gcc-${GCC_VER}/gcc/config/${OSNAME}.h
-
-setphase "PATCH NEWLIB"
-patch -p0 -d newlib-${NEWLIB_VER} < ../newlib.patch || exit
-mkdir -p newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}
-cp -r ../newlib-files/* newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/.
-cp ../newlib-files/vanilla-syscalls.c newlib-${NEWLIB_VER}/newlib/libc/sys/${OSNAME}/syscalls.c
+source ../scripts/fetchandpatch.sh
 
 
 # --- Compile all packages ---
