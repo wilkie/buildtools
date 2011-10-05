@@ -12,10 +12,10 @@ MPC_VER=0.8.1
 LLVM_VER=2.8
 
 export TARGET=x86_64-pc-${OSNAME}
-export PREFIX=`pwd`/local
+export PREFIX=`pwd`/xomb-local
 
 mkdir -p build
-mkdir -p local
+mkdir -p $PREFIX
 cd build
 
 WFLAGS=-c
@@ -28,7 +28,7 @@ wget $WFLAGS http://llvm.org/releases/2.8/llvm-$LLVM_VER.tgz
 tar -xf llvm-$LLVM_VER.tgz
 
 echo "PATCH LLVM"
-patch -p1 -d llvm-$LLVM_VER < ../llvm.patch 
+patch -p1 -d llvm-$LLVM_VER < ../patches/llvm.patch
 
 echo "BUILD LLVM"
 mkdir -p llvm-obj
