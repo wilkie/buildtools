@@ -18,7 +18,31 @@ typedef struct dirent {
 	char			d_name[1];	/* name of the entry (null byte terminated) */
 } dirent_t;
 
+/*struct __DIR {
+	        int                             fd;
+        short                   next_entry;
+        unsigned short  entries_left;
+        long                    seek_position;
+        long                    current_position;
+        struct dirent   first_entry;
+	int dd_fd;
+	long dd_loc;
+};
+
+
 typedef struct __DIR DIR;
+*/
+
+typedef struct {
+	int dd_fd;          /* directory file */
+	int dd_loc;         /* position in buffer */
+	int dd_seek;
+	char *dd_buf;       /* buffer */
+	int dd_len;         /* buffer length */
+	int dd_size;        /* amount of data in buffer */
+	int dd_lock;
+} DIR;
+
 
 #ifndef MAXNAMLEN
 #	ifdef  NAME_MAX

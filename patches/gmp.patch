@@ -1,0 +1,20 @@
+diff -rupN gmp-5.0.2.orig/configfsf.sub gmp-5.0.2/configfsf.sub
+--- gmp-5.0.2.orig/configfsf.sub	2011-09-20 02:48:37.224034311 -0400
++++ gmp-5.0.2/configfsf.sub	2011-09-20 02:53:08.140695606 -0400
+@@ -4,7 +4,7 @@
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+ #   2011 Free Software Foundation, Inc.
+ 
+-timestamp='2011-03-23'
++timestamp='2011-09-20'
+ 
+ # This file is (in principle) common to ALL GNU software.
+ # The presence of a machine in this file suggests that SOME GNU software
+@@ -1327,6 +1327,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++        | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \

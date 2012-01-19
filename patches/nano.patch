@@ -1,0 +1,11 @@
+diff -rupN ../../nano-2.3.1/config.sub ./config.sub
+--- ../../nano-2.3.1/config.sub	2011-10-04 16:11:16.241753413 -0400
++++ ./config.sub	2011-10-04 16:12:16.275083131 -0400
+@@ -1284,6 +1284,7 @@ case $os in
+ 	      | -sym* | -kopensolaris* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* \
++	      | -xomb* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \

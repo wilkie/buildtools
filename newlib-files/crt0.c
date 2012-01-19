@@ -2,8 +2,7 @@ extern int main(int, char**); //int argc, char **argv, char **environ);
 
 extern void initC2D();
 
-
-int _Dmain(int argc, char** argv){
+int start3(int argc, char** argv){
 	unsigned long long *origin, *target;
 	int i;
 

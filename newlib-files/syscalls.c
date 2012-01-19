@@ -12,61 +12,16 @@
 //#include <_ansi.h>
 #include <errno.h>
 
-// --- Process Control ---
-
-int
-_exit(int val){
-  exit(val);
-  return (-1);
-}
-
-int
-execve(char *name, char **argv, char **env) {
-	errno = ENOMEM;
-	return -1;
-}
-
-/*
- * getpid -- only one process, so just return 1.
- */
-#define __MYPID 1
-int
-getpid()
-{
-  return __MYPID;
-}
+// first, the 13 required calls
 
 
-int 
-fork(void) {
-	errno = ENOTSUP;
-	return -1;
-}
 
 
 /*
  * kill -- go out via exit...
  */
-int
-kill(pid, sig)
-     int pid;
-     int sig;
-{
-  if(pid == __MYPID)
-    _exit(sig);
 
 
-	errno = EINVAL;
-  return -1;
-}
-
-int
-wait(int *status) {
-	errno = ECHILD;
-	return -1;
-}
-
-// --- I/O ---
 
 /*
  * isatty -- returns 1 if connected to a terminal device,
@@ -75,121 +30,7 @@ wait(int *status) {
  */
 
 
-int gibOpen(const char* name, unsigned int nameLen, bool readOnly, bool append, bool create);
-int gibRead(int fd, void* buf, unsigned int len);
-int gibWrite(int fd, void* buf, unsigned int len);
 unsigned long long initHeap();
-
-
-int
-isatty(fd)
-     int fd;
-{
-	if(fd < 3){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-
-int
-open(const char *name, int flags, ...) {
-	int nameLen = strlen(name);
-	bool readOnly = false,  append = false, create = true;
-	int fd;
-
-	// O_RDONLY isn't Quite a flag, is defined as 0 
-	if( flags == O_RDONLY ){
-		readOnly = true;
-	}
-
-	fd = gibOpen(name, nameLen, readOnly, append, create);
-
-	if(fd == -1){
-		errno = ENFILE;
-		return -1;
-	}
-
-	return fd;
-}
-
-int
-close(int file) {
-	int err = gibClose(file);
-	
-	if(err < 0){
-		errno = EBADF;
-		return -1;
-	}else{
-		return 0;
-	}
-}
-
-int
-read(int file, char *ptr, int len) {
-	// XXX: keyboard support
-	if(file < 3){
-		return -1;
-	}
-
-	int err = gibRead(file, ptr, len);
-
-	if(err == -1){
-		errno = EBADF;
-	}
-
-	return err;
-}
-
-int
-write(int file, char *ptr, int len) {
-	if(file == 1 || file == 2){
-		wconsole(ptr, len);
-
-		return len;
-	}
-
-	int err =  gibWrite(file, ptr, len);
-
-	if(err >= 0){
-		return err;
-	}else{
-		errno = EBADF;
-		return -1;
-	}
-}
-
-
-/* XXX: implement these */
-int
-lseek(int file, int ptr, int dir) {
-	return 0;
-}
-
-
-int 
-fstat(int file, struct stat *st) {
-	st->st_mode = S_IFCHR;
-	return 0;
-}
-
-int
-stat(const char *file, struct stat *st){
-	st->st_mode = S_IFCHR;
-	return 0;
-}
-
-int
-link(char *old, char *new) {
-	errno = EMLINK;
-	return -1;
-}
-
-int
-unlink(char *name) {
-	errno = ENOENT;
-	return -1;
-}
 
 
 // --- Memory ---
@@ -205,7 +46,7 @@ caddr_t
 sbrk(int nbytes){
   static unsigned long long heap_ptr = 0;
   caddr_t base;
-  
+
   int temp;
 
   if(heap_ptr == 0){
@@ -235,7 +76,7 @@ sbrk(int nbytes){
     nbytes -= (int) PAGE_SIZE;
     heap_ptr = heap_ptr + PAGE_SIZE;
   }
-  
+
   if( nbytes > 0){
     heap_ptr += nbytes;
   }
@@ -249,4 +90,27 @@ sbrk(int nbytes){
  int gettimeofday(struct timeval *p, void *z){
 	 return -1;
  }
+
+
+static int fail();
+
+int utime(const char *filename, const struct utimbuf *times){
+	// I ain't tellin'
+	errno = EPERM;
+  return -1;
+}
+
+int getdents(unsigned int fd, struct linux_dirent *dirp,
+						 unsigned int count){
+	return fail();
+}
+
+int getrusage(int who, struct rusage *usage){
+	return fail();
+}
+
+/*int fail(){
+	errno = ENOSYS;
+  return -1;
+	}*/
 
