@@ -36,4 +36,5 @@ echo ${CMD}
 ${CMD} LDFLAGS="-g -T../../../xomb/app/build/elf.ld" || exit
 setphase "INSTALL PCIUTILS"
 make install $FLAGS LDFLAGS="${LDFLAGS}" || exit
+make install-lib $FLAGS LDFLAGS="${LDFLAGS}" || exit
 cd ..
