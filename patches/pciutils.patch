@@ -1,0 +1,58 @@
+diff -rupN ../pciutils-3.1.9/lib/configure ./lib/configure
+--- ../pciutils-3.1.9/lib/configure	2011-01-07 13:04:28.000000000 -0800
++++ ./lib/configure	2012-06-12 17:08:35.567795369 -0700
+@@ -132,6 +132,14 @@ case $sys in
+ 		esac
+ 		echo >>$c '#define PCI_HAVE_STDINT_H'
+ 		;;
++  xomb)
++		case $cpu in
++				i?86|x86_64)	echo_n " i386-ports"
++						echo >>$c '#define PCI_HAVE_PM_INTEL_CONF'
++						;;
++		esac
++		echo >>$c '#define PCI_HAVE_64BIT_ADDRESS'
++		;;
+ 	*)
+ 		echo " Unfortunately, your OS is not supported by the PCI Library"
+ 		exit 1
+diff -rupN ../pciutils-3.1.9/lib/i386-ports.c ./lib/i386-ports.c
+--- ../pciutils-3.1.9/lib/i386-ports.c	2011-01-07 13:04:28.000000000 -0800
++++ ./lib/i386-ports.c	2012-06-12 17:08:35.567795369 -0700
+@@ -26,6 +26,8 @@
+ #include "i386-io-haiku.h"
+ #elif defined(PCI_OS_BEOS)
+ #include "i386-io-beos.h"
++#elif defined(PCI_OS_XOMB)
++#include "i386-io-linux.h"
+ #else
+ #error Do not know how to access I/O ports on this OS.
+ #endif
+diff -rupN ../pciutils-3.1.9/lib/init.c ./lib/init.c
+--- ../pciutils-3.1.9/lib/init.c	2011-01-07 13:04:28.000000000 -0800
++++ ./lib/init.c	2012-06-12 17:08:35.567795369 -0700
+@@ -152,7 +152,7 @@ pci_alloc(void)
+   int i;
+ 
+   memset(a, 0, sizeof(*a));
+-  pci_set_name_list_path(a, PCI_PATH_IDS_DIR "/" PCI_IDS, 0);
++  pci_set_name_list_path(a, "/data/pci.ids", 0);
+ #ifdef PCI_USE_DNS
+   pci_define_param(a, "net.domain", PCI_ID_DOMAIN, "DNS domain used for resolving of ID's");
+   pci_define_param(a, "net.cache_name", "~/.pciids-cache", "Name of the ID cache file");
+diff -rupN ../pciutils-3.1.9/lib/types.h ./lib/types.h
+--- ../pciutils-3.1.9/lib/types.h	2011-01-07 13:04:28.000000000 -0800
++++ ./lib/types.h	2012-06-12 17:08:35.568795369 -0700
+@@ -21,9 +21,9 @@ typedef uint8_t u8;
+ typedef uint16_t u16;
+ typedef uint32_t u32;
+ #else
+-typedef u_int8_t u8;
+-typedef u_int16_t u16;
+-typedef u_int32_t u32;
++typedef unsigned char u8;
++typedef unsigned short u16;
++typedef unsigned int u32;
+ #endif
+ 
+ #ifdef PCI_HAVE_64BIT_ADDRESS
