@@ -33,5 +33,6 @@ patch -p1 -d llvm-$LLVM_VER < ../patches/llvm.patch
 echo "BUILD LLVM"
 mkdir -p llvm-obj
 cd llvm-obj
-../llvm-$LLVM_VER/configure --build=x86_64-unknown-linux-gnu --host=x86_64-pc-xomb --enable-optimized --enable-targets=x86 --prefix=$PREFIX
+XOMB_DIR=${PREFIX}/../../xomb
+../llvm-$LLVM_VER/configure CC="${TARGET}-gcc -T${XOMB_DIR}/app/build/elf.ld" --build=x86_64-unknown-linux-gnu --host=x86_64-pc-xomb --enable-optimized --enable-targets=x86 --prefix=$PREFIX
 make

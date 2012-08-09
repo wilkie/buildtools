@@ -1,4 +1,3 @@
-
 source scripts/functions.sh
 
 # --- Variables ---
@@ -11,7 +10,6 @@ export PATH=$PREFIX/bin:$PATH
 if [ $CLEAN -eq 1 ]; then
 		rm -rf $PREFIX build/*/
 fi
-
 
 # --- Directory creation ---
 
@@ -27,10 +25,8 @@ mkdir -p gmp-obj
 mkdir -p mpfr-obj
 mkdir -p mpc-obj
 
-
 # --- Fetch and extract each package ---
 source ../scripts/fetchandpatch.sh
-
 
 # --- Compile all packages ---
 
@@ -72,15 +68,23 @@ fi
 make install || exit
 cd ..
 
-
 setphase "AUTOCONF GCC"
 cd gcc-${GCC_VER}/libstdc++-v3
-#autoconf || exit
+# No, no, no... Use the version of autoconf installed, dammit
+sed -i '/dnl Ensure exactly this Autoconf version is used/d' ../config/override.m4
+autoconf_version=`autoconf -V | grep "autoconf" | tr ' ' '\n' | tail -1`
+sed -i "s/2.64/${autoconf_version}/g" ../config/override.m4
+autoconf_version=`autoconf -V | grep "autoconf" | tr ' ' '\n' | tail -1`
+sed -i "s/2.64/${autoconf_version}/g" ./aclocal.m4
+sed -i "s/2.64/${autoconf_version}/g" ./configure.ac
+autoconf || exit
 cd ../..
 
 setphase "COMPILE GCC"
 cd gcc-obj
 ../gcc-${GCC_VER}/configure --target=$TARGET --prefix=$PREFIX --enable-languages=c,c++ --disable-libssp --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX --without-headers --disable-nls --with-newlib || exit
+# add libstdc++ linkage for distributions that require explicit linking
+sed -i "s/BACKENDLIBS = /BACKENDLIBS = -lstdc++ /" ../gcc-${GCC_VER}/gcc/Makefile.in
 make -j$NCPU all-gcc || exit
 make install-gcc || exit
 cd ..
